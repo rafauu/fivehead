@@ -3,18 +3,17 @@
 #include <sigslot/signal.hpp>
 #include "model.hpp"
 
+
+namespace Fivehead
+{
+
 struct Ui
 {
     class BoardView
     {
     public:
-        explicit BoardView(const Model& model) : model{model} {}
-
-        void renderData()
-        {
-            //TODO: render only data that has changed since last render
-        }
-
+        explicit BoardView(const Model&);
+        void renderData();
     private:
         const Model& model;
     };
@@ -29,3 +28,6 @@ struct Ui
     BoardView boardView;
     User user;
 };
+
+}
+

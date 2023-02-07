@@ -2,7 +2,7 @@
 
 int main()
 {
-    Game game{};
+    Fivehead::Game game{};
     game.runSimulation();
 
     return 0;

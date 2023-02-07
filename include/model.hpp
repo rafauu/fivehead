@@ -1,39 +1,16 @@
 #pragma once
 
-#include <fmt/core.h>
-#include <fmt/ranges.h>
-#include <sigslot/signal.hpp>
+#include "property.hpp"
+
+#include <cstdint>
+#include <limits>
 #include <array>
-#include <type_traits>
-#include <functional>
+#include <vector>
+#include <sigslot/signal.hpp>
 
 
-template <typename T>
-class Property
+namespace Fivehead
 {
-private:
-    T data;
-    std::function<void()> callable;
-
-public:
-    template <typename Callable>
-    explicit Property(Callable callable) : callable{callable} {}
-
-    const T& get() const
-    {
-        return data;
-    }
-
-    template <typename U>
-    void set(U&& newData)
-    {
-        const bool dataChanged = (newData != data);
-        data = std::forward<U>(newData);
-        if (dataChanged)
-            callable();
-    }
-};
-
 
 struct ModelTypes
 {
@@ -64,60 +41,6 @@ public:
     };
 };
 
-template <typename T>
-constexpr char formatColor(T color);
-
-template <>
-constexpr char formatColor<ModelTypes::CodeColor>(ModelTypes::CodeColor color)
-{
-    struct MappingType 
-    {
-        ModelTypes::CodeColor color;
-        char output;
-    };
-
-    constexpr std::array mapping{
-        MappingType{ModelTypes::CodeColor::Red,    'R'},
-        MappingType{ModelTypes::CodeColor::Green,  'G'},
-        MappingType{ModelTypes::CodeColor::Yellow, 'Y'},
-        MappingType{ModelTypes::CodeColor::Blue,   'B'},
-        MappingType{ModelTypes::CodeColor::Pink,   'P'}
-    };
-    auto it = std::find_if(std::begin(mapping), std::end(mapping), [=](auto entry){ return entry.color == color; });
-    return it != std::end(mapping) ? it->output : ' ';
-}
-
-template <>
-constexpr char formatColor<ModelTypes::KeyColor>(ModelTypes::KeyColor color)
-{
-    struct MappingType 
-    {
-        ModelTypes::KeyColor color;
-        char output;
-    };
-
-    constexpr std::array mapping{
-        MappingType{ModelTypes::KeyColor::Black, 'B'},
-        MappingType{ModelTypes::KeyColor::White, 'W'}
-    };
-    auto it = std::find_if(std::begin(mapping), std::end(mapping), [=](auto entry){ return entry.color == color; });
-    return it != std::end(mapping) ? it->output : ' ';
-}
-
-#define ENABLE_FORMATTING(Type, ...) \
-template <> class fmt::formatter<Type> { \
-public: \
-    constexpr auto parse (format_parse_context& ctx) { return ctx.begin(); } \
-    template <typename Context> \
-    constexpr auto format (const Type& value, Context& ctx) const \
-    { \
-        return format_to(ctx.out(), __VA_ARGS__); \
-    } \
-}; \
-
-ENABLE_FORMATTING(ModelTypes::CodeColor, "{}", formatColor(value))
-ENABLE_FORMATTING(ModelTypes::KeyColor, "{}", formatColor(value))
-
 struct Model : ModelTypes
 {
     Property<Code> codemakerCode{[this]{ dataChanged(); }};
@@ -126,3 +49,6 @@ struct Model : ModelTypes
 
     sigslot::signal<> dataChanged;
 };
+
+}
+
