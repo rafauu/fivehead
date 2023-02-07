@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
