@@ -12,7 +12,7 @@ namespace Fivehead
 Game::Game() :
     model{std::make_unique<Model>()},
     controller{std::make_unique<Controller>(*model)},
-    ui{std::make_unique<Ui>(Ui::BoardView{*model}, Ui::User{})},
+    ui{std::make_unique<Ui>(Ui{Ui::BoardView{*model}, Ui::User{}})},
     logic{std::make_unique<Logic>()}
 {
     ui->user.setCodemakerCode.connect(&Controller::newCodemakerCode, controller.get());

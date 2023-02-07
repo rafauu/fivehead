@@ -6,10 +6,10 @@
 namespace Fivehead
 {
 
-class Model;
+struct Model;
 class Controller;
-class Ui;
-class Logic;
+struct Ui;
+struct Logic;
 
 class Game
 {

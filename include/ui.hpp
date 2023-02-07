@@ -15,7 +15,7 @@ struct Ui
         explicit BoardView(const Model&);
         void renderData();
     private:
-        const Model& model;
+        [[maybe_unused]] const Model& model;
     };
 
     class User
